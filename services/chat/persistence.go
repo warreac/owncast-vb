@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	maxBacklogHours = 2 // Keep backlog max hours worth of messages
+	maxBacklogHours = 168 // Keep backlog max hours worth of messages (Villa Bota: one week)
 )
 
 func (s *Service) setupPersistence() {
