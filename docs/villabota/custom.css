@@ -115,3 +115,28 @@ body.body-background #chat-container {
 [class*='ChatContainer'][class*='_chatTextField'] {
   border-top: none !important;
 }
+
+/* Emoji window: no white frame around it, and black like the chat, whether the
+   visitor's device is in light or dark mode. The picker reads these variables. */
+.ant-popover:has(em-emoji-picker) .ant-popover-container,
+.ant-popover:has(em-emoji-picker) .ant-popover-inner {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.ant-popover:has(em-emoji-picker) .ant-popover-arrow {
+  display: none !important;
+}
+
+em-emoji-picker {
+  --rgb-background: 0, 0, 0;
+  --rgb-color: 255, 255, 255;
+  --rgb-accent: 255, 255, 255;
+  --rgb-input: 26, 26, 26;
+  --color-border: rgba(255, 255, 255, 0.15);
+  --color-border-over: rgba(255, 255, 255, 0.3);
+  --border-radius: 0;
+  --shadow: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
