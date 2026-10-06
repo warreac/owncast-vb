@@ -11,6 +11,7 @@ export function handleNameChangeEvent(
       ? {
           ...currentUser,
           displayName: message.user.displayName,
+          nameChangedAt: new Date().toISOString(),
         }
       : currentUser,
   );

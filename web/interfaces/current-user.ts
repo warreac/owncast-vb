@@ -3,4 +3,5 @@ export interface CurrentUser {
   displayName: string;
   displayColor: number;
   isModerator: boolean;
+  nameChangedAt?: Date | string;
 }

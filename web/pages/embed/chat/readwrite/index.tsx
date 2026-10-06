@@ -1,10 +1,13 @@
 /* eslint-disable react/no-unknown-property */
 import { useAtomValue } from 'jotai';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import Head from 'next/head';
 import { useTranslation } from 'next-export-i18n';
 import { ErrorBoundary, getErrorMessage } from 'react-error-boundary';
 import { ChatContainer } from '../../../../components/chat/ChatContainer/ChatContainer';
+import { ChatNameFirst } from '../../../../components/chat/ChatNameFirst/ChatNameFirst';
+import { hasChosenName } from '../../../../components/chat/ChatNameFirst/hasChosenName';
+import { MessageType } from '../../../../interfaces/socket-events';
 import {
   ClientConfigStore,
   currentUserAtom,
@@ -23,7 +26,12 @@ import { Localization } from '../../../../types/localization';
 export default function ReadWriteChatEmbed() {
   const { t } = useTranslation();
   const currentUser = useAtomValue(currentUserAtom);
-  const messages = useAtomValue(visibleChatMessagesSelector);
+  const allMessages = useAtomValue(visibleChatMessagesSelector);
+  // Every chatter picks a name first, so "X is now known as Y" would only be noise here.
+  const messages = useMemo(
+    () => allMessages.filter(message => message.type !== MessageType.NAME_CHANGE),
+    [allMessages],
+  );
   const clientConfig = useAtomValue(clientConfigStateAtom);
   const clientStatus = useAtomValue(serverStatusState);
 
@@ -46,6 +54,7 @@ export default function ReadWriteChatEmbed() {
   const { streamTitle, online } = clientStatus;
 
   const headerText = online ? streamTitle || name : name;
+  const nameChosen = hasChosenName(currentUser);
 
   const pageTitle = name ? t(Localization.Frontend.chatEmbedTitle, { name }) : 'Chat';
 
@@ -110,12 +119,13 @@ export default function ReadWriteChatEmbed() {
                 usernameToHighlight={currentUser.displayName}
                 chatUserId={currentUser.id}
                 isModerator={currentUser.isModerator}
-                showInput
+                showInput={nameChosen}
                 height="100%"
                 chatAvailable={isChatAvailable}
                 inputEnabled={chatInputEnabled}
                 inputDisabledPlaceholder={chatInputDisabledMessage}
               />
+              {!nameChosen && <ChatNameFirst />}
             </div>
           )}
         </div>
